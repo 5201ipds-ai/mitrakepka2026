@@ -210,13 +210,13 @@ function tampilkanTabelAdmin() {
   dataHalaman.forEach(item => {
     const tr = document.createElement("tr");
 
-    tr.innerHTML = `
-      <td>${item.sobatId}</td>
-      <td>${kapital(item.nama)}</td>
-      <td>${kapital(item.kecamatan)}</td>
-      <td>${kecil(item.email)}</td>
-      <td>${item.hp}</td>
-    `;
+tr.innerHTML = `
+  <td data-label="SobatID">${item.sobatId}</td>
+  <td data-label="Nama">${kapital(item.nama)}</td>
+  <td data-label="Kecamatan">${kapital(item.kecamatan)}</td>
+  <td data-label="Email">${kecil(item.email)}</td>
+  <td data-label="Nomor HP">${item.hp}</td>
+`;
 
     tbody.appendChild(tr);
   });
