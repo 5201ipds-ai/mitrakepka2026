@@ -165,13 +165,13 @@ function tampilkanTabel() {
   dataHalaman.forEach(item => {
     const tr = document.createElement("tr");
 
-    tr.innerHTML = `
-      <td>${item.sobatId}</td>
-      <td>${kapital(item.nama)}</td>
-      <td>${kapital(item.kecamatan)}</td>
-      <td>${sensorEmail(item.email)}</td>
-      <td>${sensorHP(item.hp)}</td>
-    `;
+tr.innerHTML = `
+  <td data-label="SobatID">${item.sobatId}</td>
+  <td data-label="Nama">${kapital(item.nama)}</td>
+  <td data-label="Kecamatan">${kapital(item.kecamatan)}</td>
+  <td data-label="Email">${sensorEmail(item.email)}</td>
+  <td data-label="Nomor HP">${sensorHP(item.hp)}</td>
+`;
 
     tbody.appendChild(tr);
   });
