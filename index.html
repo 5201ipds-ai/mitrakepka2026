@@ -19,7 +19,26 @@
   <a href="admin.html" class="btn-admin">
     LOGIN ADMIN
   </a>
+<div class="filter-box">
 
+  <input
+    type="text"
+    id="searchInput"
+    placeholder="Cari nama, email, HP, atau kecamatan..."
+  >
+
+  <select id="filterKecamatan">
+    <option value="">Semua Kecamatan</option>
+  </select>
+
+  <select id="pageSize">
+    <option value="10">10 data</option>
+    <option value="25">25 data</option>
+    <option value="50">50 data</option>
+    <option value="100">100 data</option>
+  </select>
+
+</div>
   <!-- TABEL -->
   <table>
 
@@ -47,7 +66,15 @@
     </tbody>
 
   </table>
+<div class="pagination">
+  <button id="prevPage">Sebelumnya</button>
 
+  <span id="pageInfo">
+    Halaman 1
+  </span>
+
+  <button id="nextPage">Berikutnya</button>
+</div>
   <!-- CONFIG -->
   <script src="js/config.js"></script>
 
