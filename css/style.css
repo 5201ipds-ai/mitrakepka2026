@@ -162,32 +162,148 @@ tr:hover {
 
 @media (max-width: 768px) {
   body {
-    padding: 12px;
+    padding: 14px;
+    background:
+      radial-gradient(circle at top, rgba(249, 115, 22, 0.35), transparent 30%),
+      linear-gradient(180deg, #fff7ed, #ffffff);
   }
 
   h1 {
     font-size: 24px;
+    line-height: 1.25;
+    margin-top: 8px;
+    margin-bottom: 18px;
+  }
+
+  .btn-admin,
+  button {
+    width: 100%;
+    text-align: center;
+    padding: 13px 16px;
+    font-size: 14px;
+  }
+
+  .filter-box {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 14px;
+    margin-top: 18px;
+    border-radius: 22px;
+  }
+
+  .filter-box input,
+  .filter-box select,
+  input {
+    width: 100%;
+    border-radius: 14px;
+    font-size: 14px;
+    padding: 13px;
   }
 
   table {
     display: block;
-    overflow-x: auto;
-    white-space: nowrap;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-radius: 0;
+    overflow: visible;
   }
 
-  th,
+  thead {
+    display: none;
+  }
+
+  tbody {
+    display: grid;
+    gap: 14px;
+    margin-top: 18px;
+  }
+
+  tr {
+    display: block;
+    padding: 14px;
+    border-radius: 22px;
+
+    background: rgba(255, 255, 255, 0.68);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    border: 1px solid rgba(249, 115, 22, 0.18);
+    box-shadow: 0 14px 35px rgba(249, 115, 22, 0.12);
+  }
+
+  tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.68);
+  }
+
+  tr:hover {
+    background: rgba(255, 247, 237, 0.9);
+  }
+
   td {
-    font-size: 13px;
-    padding: 9px;
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(249, 115, 22, 0.12);
+
+    font-size: 14px;
+    text-align: right;
+    word-break: break-word;
   }
 
-  .filter-box {
-    padding: 12px;
+  td:last-child {
+    border-bottom: none;
   }
 
-  .filter-box input,
-  .filter-box select {
-    width: 100%;
+  td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: #9a3412;
+    text-align: left;
+    min-width: 95px;
+  }
+
+  td[data-label="Nama"] {
+    display: block;
+    text-align: left;
+    font-size: 16px;
+    font-weight: 800;
+    color: #7c2d12;
+    padding-bottom: 12px;
+  }
+
+  td[data-label="Nama"]::before {
+    display: block;
+    content: "Nama";
+    font-size: 12px;
+    margin-bottom: 4px;
+    color: #ea580c;
+  }
+
+  .pagination {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 14px;
+    border-radius: 22px;
+  }
+
+  #pageInfo,
+  #pageInfoAdmin {
+    display: block;
+    text-align: center;
+    font-size: 14px;
+    order: -1;
+  }
+
+  #loginBox {
+    margin: 22px auto;
+    padding: 18px;
+    border-radius: 22px;
   }
 }
 
