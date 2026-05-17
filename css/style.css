@@ -190,3 +190,12 @@ tr:hover {
     width: 100%;
   }
 }
+
+th {
+  user-select: none;
+}
+
+th:hover {
+  filter: brightness(1.08);
+  cursor: pointer;
+}
