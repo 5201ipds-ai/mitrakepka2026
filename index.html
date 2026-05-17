@@ -24,7 +24,7 @@
   <input
     type="text"
     id="searchInput"
-    placeholder="Cari nama, email, HP, atau kecamatan..."
+    placeholder="Cari nama..."
   >
 
   <select id="filterKecamatan">
@@ -43,15 +43,15 @@
   <table>
 
     <!-- KEPALA TABEL -->
-    <thead>
-      <tr>
-        <th>SobatID</th>
-        <th>Nama</th>
-        <th>Kecamatan</th>
-        <th>Email</th>
-        <th>Nomor HP</th>
-      </tr>
-    </thead>
+<thead>
+  <tr>
+    <th onclick="sortKolom('sobatId')">SobatID ⬍</th>
+    <th onclick="sortKolom('nama')">Nama ⬍</th>
+    <th onclick="sortKolom('kecamatan')">Kecamatan ⬍</th>
+    <th onclick="sortKolom('email')">Email ⬍</th>
+    <th onclick="sortKolom('hp')">Nomor HP ⬍</th>
+  </tr>
+</thead>
 
     <!-- ISI TABEL -->
     <tbody id="dataBody">
