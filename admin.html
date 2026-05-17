@@ -46,16 +46,37 @@
       LOGOUT
     </button>
 
+<div class="filter-box">
+
+  <input
+    type="text"
+    id="searchAdmin"
+    placeholder="Cari nama..."
+  >
+
+  <select id="filterKecamatanAdmin">
+    <option value="">Semua Kecamatan</option>
+  </select>
+
+  <select id="pageSizeAdmin">
+    <option value="10">10 data</option>
+    <option value="25">25 data</option>
+    <option value="50">50 data</option>
+    <option value="100">100 data</option>
+  </select>
+
+</div>
+    
     <table>
-      <thead>
-        <tr>
-          <th>SobatID</th>
-          <th>Nama</th>
-          <th>Kecamatan</th>
-          <th>Email</th>
-          <th>Nomor HP</th>
-        </tr>
-      </thead>
+<thead>
+  <tr>
+    <th onclick="sortKolomAdmin('sobatId')">SobatID ⬍</th>
+    <th onclick="sortKolomAdmin('nama')">Nama ⬍</th>
+    <th onclick="sortKolomAdmin('kecamatan')">Kecamatan ⬍</th>
+    <th onclick="sortKolomAdmin('email')">Email ⬍</th>
+    <th onclick="sortKolomAdmin('hp')">Nomor HP ⬍</th>
+  </tr>
+</thead>
 
       <tbody id="adminBody">
         <tr>
@@ -66,6 +87,16 @@
       </tbody>
     </table>
 
+<div class="pagination">
+  <button id="prevPageAdmin">Sebelumnya</button>
+
+  <span id="pageInfoAdmin">
+    Halaman 1
+  </span>
+
+  <button id="nextPageAdmin">Berikutnya</button>
+</div>
+    
   </div>
 
   <script src="js/config.js"></script>
