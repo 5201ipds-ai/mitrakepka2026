@@ -1,3 +1,5 @@
+let kolomSort = "nama";
+let arahSort = "asc";
 let semuaData = [];
 let dataTampil = [];
 let halamanSekarang = 1;
@@ -43,11 +45,10 @@ async function ambilDataPublik() {
 
 const hasil = await ambilJSONP(`${API_URL}?mode=public`);
 
-semuaData = (hasil.data || []).sort((a, b) => {
-  return kapital(a.nama).localeCompare(kapital(b.nama));
-});
-
+semuaData = hasil.data || [];
 dataTampil = [...semuaData];
+
+urutkanDataTampil();
 
     isiFilterKecamatan();
     tampilkanTabel();
@@ -96,15 +97,9 @@ function prosesFilter() {
 
   dataTampil = semuaData.filter(item => {
     const nama = kecil(item.nama);
-    const kecamatan = kecil(item.kecamatan);
-    const email = kecil(item.email);
-    const hp = String(item.hp || "");
 
     const cocokKeyword =
-      nama.includes(keyword) ||
-      kecamatan.includes(keyword) ||
-      email.includes(keyword) ||
-      hp.includes(keyword);
+      nama.includes(keyword);
 
     const cocokKecamatan =
       kecamatanDipilih === "" ||
@@ -114,7 +109,32 @@ function prosesFilter() {
   });
 
   halamanSekarang = 1;
+  urutkanDataTampil();
   tampilkanTabel();
+}
+
+function sortKolom(kolom) {
+  if (kolomSort === kolom) {
+    arahSort = arahSort === "asc" ? "desc" : "asc";
+  } else {
+    kolomSort = kolom;
+    arahSort = "asc";
+  }
+
+  urutkanDataTampil();
+  halamanSekarang = 1;
+  tampilkanTabel();
+}
+
+function urutkanDataTampil() {
+  dataTampil.sort((a, b) => {
+    const nilaiA = kecil(a[kolomSort]);
+    const nilaiB = kecil(b[kolomSort]);
+
+    return arahSort === "asc"
+      ? nilaiA.localeCompare(nilaiB, "id", { numeric: true })
+      : nilaiB.localeCompare(nilaiA, "id", { numeric: true });
+  });
 }
 
 function tampilkanTabel() {
