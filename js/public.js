@@ -50,13 +50,14 @@ async function ambilDataPublik() {
     isiFilterKecamatan();
     tampilkanTabel();
 
-  } catch (error) {
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="5">Gagal memuat data</td>
-      </tr>
-    `;
-  }
+} catch (error) {
+  console.log("ERROR PUBLIC:", error);
+
+  tbody.innerHTML = `
+    <tr>
+      <td colspan="5">Gagal memuat data</td>
+    </tr>
+  `;
 }
 
 function isiFilterKecamatan() {
