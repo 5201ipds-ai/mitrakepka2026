@@ -1,4 +1,38 @@
-document.addEventListener("DOMContentLoaded", cekLoginAdmin);
+let semuaDataAdmin = [];
+let dataTampilAdmin = [];
+let halamanAdmin = 1;
+let jumlahPerHalamanAdmin = 10;
+
+let kolomSortAdmin = "nama";
+let arahSortAdmin = "asc";
+
+document.addEventListener("DOMContentLoaded", () => {
+  cekLoginAdmin();
+
+  document
+    .getElementById("searchAdmin")
+    .addEventListener("input", prosesFilterAdmin);
+
+  document
+    .getElementById("filterKecamatanAdmin")
+    .addEventListener("change", prosesFilterAdmin);
+
+  document
+    .getElementById("pageSizeAdmin")
+    .addEventListener("change", function () {
+      jumlahPerHalamanAdmin = Number(this.value);
+      halamanAdmin = 1;
+      tampilkanTabelAdmin();
+    });
+
+  document
+    .getElementById("prevPageAdmin")
+    .addEventListener("click", halamanSebelumnyaAdmin);
+
+  document
+    .getElementById("nextPageAdmin")
+    .addEventListener("click", halamanBerikutnyaAdmin);
+});
 
 function cekLoginAdmin() {
   const login = sessionStorage.getItem("adminLogin");
@@ -21,11 +55,9 @@ async function loginAdmin() {
   info.textContent = "Memeriksa login...";
 
   try {
-    const response = await fetch(
+    const hasil = await ambilJSONP(
       `${API_URL}?mode=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`
     );
-
-    const hasil = await response.json();
 
     if (!hasil.success) {
       info.textContent = "Username atau password salah";
@@ -33,10 +65,10 @@ async function loginAdmin() {
     }
 
     sessionStorage.setItem("adminLogin", "true");
-
     tampilkanDataAdmin();
 
   } catch (error) {
+    console.log("ERROR LOGIN ADMIN:", error);
     info.textContent = "Gagal login. Periksa koneksi atau Apps Script.";
   }
 }
@@ -56,26 +88,18 @@ async function tampilkanDataAdmin() {
   `;
 
   try {
-    const response = await fetch(`${API_URL}?mode=public`);
-    const hasil = await response.json();
+    const hasil = await ambilJSONP(`${API_URL}?mode=public`);
 
-    tbody.innerHTML = "";
+    semuaDataAdmin = hasil.data || [];
+    dataTampilAdmin = [...semuaDataAdmin];
 
-    hasil.data.forEach(item => {
-      const tr = document.createElement("tr");
-
-      tr.innerHTML = `
-        <td>${item.sobatId}</td>
-        <td>${kapital(item.nama)}</td>
-        <td>${kapital(item.kecamatan)}</td>
-        <td>${kecil(item.email)}</td>
-        <td>${item.hp}</td>
-      `;
-
-      tbody.appendChild(tr);
-    });
+    isiFilterKecamatanAdmin();
+    urutkanDataAdmin();
+    tampilkanTabelAdmin();
 
   } catch (error) {
+    console.log("ERROR ADMIN:", error);
+
     tbody.innerHTML = `
       <tr>
         <td colspan="5">Gagal memuat data admin</td>
@@ -84,7 +108,170 @@ async function tampilkanDataAdmin() {
   }
 }
 
+function isiFilterKecamatanAdmin() {
+  const select = document.getElementById("filterKecamatanAdmin");
+
+  select.innerHTML = `
+    <option value="">Semua Kecamatan</option>
+  `;
+
+  const daftarKecamatan = [
+    ...new Set(
+      semuaDataAdmin
+        .map(item => kapital(item.kecamatan))
+        .filter(kec => kec !== "")
+    )
+  ].sort();
+
+  daftarKecamatan.forEach(kecamatan => {
+    const option = document.createElement("option");
+    option.value = kecamatan;
+    option.textContent = kecamatan;
+    select.appendChild(option);
+  });
+}
+
+function prosesFilterAdmin() {
+  const keyword = kecil(
+    document.getElementById("searchAdmin").value
+  );
+
+  const kecamatanDipilih =
+    document.getElementById("filterKecamatanAdmin").value;
+
+  dataTampilAdmin = semuaDataAdmin.filter(item => {
+    const nama = kecil(item.nama);
+
+    const cocokKeyword =
+      nama.includes(keyword);
+
+    const cocokKecamatan =
+      kecamatanDipilih === "" ||
+      kapital(item.kecamatan) === kecamatanDipilih;
+
+    return cocokKeyword && cocokKecamatan;
+  });
+
+  halamanAdmin = 1;
+  urutkanDataAdmin();
+  tampilkanTabelAdmin();
+}
+
+function sortKolomAdmin(kolom) {
+  if (kolomSortAdmin === kolom) {
+    arahSortAdmin = arahSortAdmin === "asc" ? "desc" : "asc";
+  } else {
+    kolomSortAdmin = kolom;
+    arahSortAdmin = "asc";
+  }
+
+  urutkanDataAdmin();
+  halamanAdmin = 1;
+  tampilkanTabelAdmin();
+}
+
+function urutkanDataAdmin() {
+  dataTampilAdmin.sort((a, b) => {
+    const nilaiA = kecil(a[kolomSortAdmin]);
+    const nilaiB = kecil(b[kolomSortAdmin]);
+
+    return arahSortAdmin === "asc"
+      ? nilaiA.localeCompare(nilaiB, "id", { numeric: true })
+      : nilaiB.localeCompare(nilaiA, "id", { numeric: true });
+  });
+}
+
+function tampilkanTabelAdmin() {
+  const tbody = document.getElementById("adminBody");
+  const pageInfo = document.getElementById("pageInfoAdmin");
+
+  tbody.innerHTML = "";
+
+  const totalData = dataTampilAdmin.length;
+  const totalHalaman =
+    Math.ceil(totalData / jumlahPerHalamanAdmin) || 1;
+
+  if (halamanAdmin > totalHalaman) {
+    halamanAdmin = totalHalaman;
+  }
+
+  const mulai = (halamanAdmin - 1) * jumlahPerHalamanAdmin;
+  const akhir = mulai + jumlahPerHalamanAdmin;
+  const dataHalaman = dataTampilAdmin.slice(mulai, akhir);
+
+  if (dataHalaman.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5">Data tidak ditemukan</td>
+      </tr>
+    `;
+  }
+
+  dataHalaman.forEach(item => {
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>${item.sobatId}</td>
+      <td>${kapital(item.nama)}</td>
+      <td>${kapital(item.kecamatan)}</td>
+      <td>${kecil(item.email)}</td>
+      <td>${item.hp}</td>
+    `;
+
+    tbody.appendChild(tr);
+  });
+
+  pageInfo.textContent =
+    `Halaman ${halamanAdmin} dari ${totalHalaman} | Total ${totalData} data`;
+
+  document.getElementById("prevPageAdmin").disabled =
+    halamanAdmin <= 1;
+
+  document.getElementById("nextPageAdmin").disabled =
+    halamanAdmin >= totalHalaman;
+}
+
+function halamanSebelumnyaAdmin() {
+  if (halamanAdmin > 1) {
+    halamanAdmin--;
+    tampilkanTabelAdmin();
+  }
+}
+
+function halamanBerikutnyaAdmin() {
+  const totalHalaman =
+    Math.ceil(dataTampilAdmin.length / jumlahPerHalamanAdmin) || 1;
+
+  if (halamanAdmin < totalHalaman) {
+    halamanAdmin++;
+    tampilkanTabelAdmin();
+  }
+}
+
 function logoutAdmin() {
   sessionStorage.removeItem("adminLogin");
   location.reload();
+}
+
+function ambilJSONP(url) {
+  return new Promise((resolve, reject) => {
+    const callbackName = "jsonpCallback_" + Date.now();
+
+    window[callbackName] = function (data) {
+      delete window[callbackName];
+      script.remove();
+      resolve(data);
+    };
+
+    const script = document.createElement("script");
+    script.src = url + "&callback=" + callbackName;
+
+    script.onerror = function () {
+      delete window[callbackName];
+      script.remove();
+      reject(new Error("Gagal memuat data JSONP"));
+    };
+
+    document.body.appendChild(script);
+  });
 }
