@@ -41,8 +41,7 @@ async function ambilDataPublik() {
       </tr>
     `;
 
-    const response = await fetch(`${API_URL}?mode=public`);
-    const hasil = await response.json();
+const hasil = await ambilJSONP(`${API_URL}?mode=public`);
 
     semuaData = hasil.data || [];
     dataTampil = [...semuaData];
@@ -179,4 +178,28 @@ function halamanBerikutnya() {
     halamanSekarang++;
     tampilkanTabel();
   }
+}
+
+function ambilJSONP(url) {
+  return new Promise((resolve, reject) => {
+    const callbackName = "jsonpCallback_" + Date.now();
+
+    window[callbackName] = function (data) {
+      delete window[callbackName];
+      script.remove();
+      resolve(data);
+    };
+
+    const script = document.createElement("script");
+
+    script.src = url + "&callback=" + callbackName;
+
+    script.onerror = function () {
+      delete window[callbackName];
+      script.remove();
+      reject(new Error("Gagal memuat data JSONP"));
+    };
+
+    document.body.appendChild(script);
+  });
 }
