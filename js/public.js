@@ -153,7 +153,7 @@ function tampilkanTabel() {
     `Halaman ${halamanSekarang} dari ${totalHalaman} | Total ${totalData} data`;
 
   document.getElementById("prevPage").disabled =
-    halamanSekkarang <= 1;
+    halamanSekarang <= 1;
 
   document.getElementById("nextPage").disabled =
     halamanSekarang >= totalHalaman;
