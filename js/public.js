@@ -43,8 +43,11 @@ async function ambilDataPublik() {
 
 const hasil = await ambilJSONP(`${API_URL}?mode=public`);
 
-    semuaData = hasil.data || [];
-    dataTampil = [...semuaData];
+semuaData = (hasil.data || []).sort((a, b) => {
+  return kapital(a.nama).localeCompare(kapital(b.nama));
+});
+
+dataTampil = [...semuaData];
 
     isiFilterKecamatan();
     tampilkanTabel();
