@@ -50,18 +50,23 @@ async function ambilDataPublik() {
     isiFilterKecamatan();
     tampilkanTabel();
 
-} catch (error) {
-  console.log("ERROR PUBLIC:", error);
+  } catch (error) {
+    console.log("ERROR PUBLIC:", error);
 
-  tbody.innerHTML = `
-    <tr>
-      <td colspan="5">Gagal memuat data</td>
-    </tr>
-  `;
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5">Gagal memuat data</td>
+      </tr>
+    `;
+  }
 }
 
 function isiFilterKecamatan() {
   const select = document.getElementById("filterKecamatan");
+
+  select.innerHTML = `
+    <option value="">Semua Kecamatan</option>
+  `;
 
   const daftarKecamatan = [
     ...new Set(
@@ -125,7 +130,6 @@ function tampilkanTabel() {
 
   const mulai = (halamanSekarang - 1) * jumlahPerHalaman;
   const akhir = mulai + jumlahPerHalaman;
-
   const dataHalaman = dataTampil.slice(mulai, akhir);
 
   if (dataHalaman.length === 0) {
@@ -175,5 +179,4 @@ function halamanBerikutnya() {
     halamanSekarang++;
     tampilkanTabel();
   }
-}
 }
